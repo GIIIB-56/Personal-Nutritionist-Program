@@ -16,8 +16,6 @@ export function Profile({ userProfile, onUpdateProfile, onBack }: ProfileProps) 
   const [aiProvider, setAiProvider] = useState<'openai' | 'gemini'>(
     userProfile.aiProvider || 'openai'
   );
-  const [openaiKey, setOpenaiKey] = useState(userProfile.openaiKey || '');
-  const [geminiKey, setGeminiKey] = useState(userProfile.geminiKey || '');
   const [theme, setTheme] = useState<'light' | 'dark'>(userProfile.themeMode || 'light');
   const [fontSize, setFontSize] = useState(
     Math.round((userProfile.fontScale || 1) * 100)
@@ -60,8 +58,6 @@ export function Profile({ userProfile, onUpdateProfile, onBack }: ProfileProps) 
       goal,
       dailyCalories,
       aiProvider,
-      openaiKey,
-      geminiKey,
       themeMode: theme,
       fontScale: fontSize / 100
     });
@@ -300,30 +296,6 @@ export function Profile({ userProfile, onUpdateProfile, onBack }: ProfileProps) 
                 Gemini
               </button>
             </div>
-          </div>
-
-          {/* OpenAI API Key */}
-          <div className="mb-4">
-            <label className="text-gray-600 text-sm mb-2 block">OpenAI API Key</label>
-            <input
-              type="password"
-              value={openaiKey}
-              onChange={(e) => setOpenaiKey(e.target.value)}
-              className="w-full h-12 px-4 rounded-xl bg-[#F8F9FA] text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#2ECC71] border border-transparent focus:border-[#2ECC71] font-mono text-sm"
-              placeholder="sk-..."
-            />
-          </div>
-
-          {/* Gemini API Key */}
-          <div>
-            <label className="text-gray-600 text-sm mb-2 block">Gemini API Key</label>
-            <input
-              type="password"
-              value={geminiKey}
-              onChange={(e) => setGeminiKey(e.target.value)}
-              className="w-full h-12 px-4 rounded-xl bg-[#F8F9FA] text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#2ECC71] border border-transparent focus:border-[#2ECC71] font-mono text-sm"
-              placeholder="AIza..."
-            />
           </div>
         </div>
 

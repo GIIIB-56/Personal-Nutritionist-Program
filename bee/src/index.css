@@ -1805,6 +1805,7 @@
 }
 
 :root {
+  --font-scale: 1;
   --font-size: 16px;
   --background: #fff;
   --foreground: oklch(.145 0 0);
@@ -1882,8 +1883,45 @@
   --sidebar-ring: oklch(.439 0 0);
 }
 
+.dark .bg-white {
+  background-color: #0f172a;
+}
+
+.dark .bg-\[\#F8F9FA\] {
+  background-color: #0b1220;
+}
+
+.dark .bg-\[\#F3F4F6\] {
+  background-color: #1f2937;
+}
+
+.dark .text-gray-900 {
+  color: #f8fafc;
+}
+
+.dark .text-gray-800 {
+  color: #e2e8f0;
+}
+
+.dark .text-gray-700 {
+  color: #cbd5e1;
+}
+
+.dark .text-gray-600,
+.dark .text-gray-500 {
+  color: #94a3b8;
+}
+
+.dark .border-gray-100 {
+  border-color: #1f2937;
+}
+
+.dark .border-gray-200 {
+  border-color: #334155;
+}
+
 html {
-  font-size: var(--font-size);
+  font-size: calc(var(--font-size) * var(--font-scale));
 }
 
 ::-webkit-scrollbar {

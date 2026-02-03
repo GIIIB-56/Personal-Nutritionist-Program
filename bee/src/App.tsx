@@ -145,6 +145,7 @@ export default function App() {
         const profileResponse = await getProfile();
         setUserProfile((prev) => ({
           ...prev,
+          weight: profileResponse.data.weight ?? prev.weight,
           height: profileResponse.data.height ?? prev.height,
           activityLevel: profileResponse.data.activity_level ?? prev.activityLevel,
           goal: profileResponse.data.target_type ?? prev.goal,
@@ -275,8 +276,8 @@ export default function App() {
         height: profile.height,
         activity_level: profile.activityLevel,
         ai_provider: profile.aiProvider,
-        openai_key: profile.openaiKey,
-        gemini_key: profile.geminiKey,
+        openai_key: null,
+        gemini_key: null,
         theme_mode: profile.themeMode,
         font_scale: profile.fontScale,
         target_type: profile.goal,

@@ -296,10 +296,12 @@ function buildAdvicePrompt(profile, summary) {
 }
 
 function getAiConfig(profile) {
+  const envOpenaiKey = process.env.OPENAI_API_KEY;
+  const envGeminiKey = process.env.GEMINI_API_KEY;
   return {
     provider: profile.ai_provider || process.env.AI_PROVIDER || "openai",
-    openaiKey: profile.openai_key || process.env.OPENAI_API_KEY,
-    geminiKey: profile.gemini_key || process.env.GEMINI_API_KEY,
+    openaiKey: envOpenaiKey || profile.openai_key,
+    geminiKey: envGeminiKey || profile.gemini_key,
   };
 }
 
