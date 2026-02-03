@@ -2,12 +2,10 @@ Set-StrictMode -Version Latest
 
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $backendPath = Join-Path $projectRoot "BE"
-$frontendPath = Get-ChildItem -LiteralPath $projectRoot -Directory |
-  Where-Object { $_.Name -ne "BE" -and (Test-Path (Join-Path $_.FullName "package.json")) } |
-  Select-Object -First 1 -ExpandProperty FullName
+$frontendPath = Join-Path $projectRoot "bee"
 
-if (-not $frontendPath) {
-  throw "Frontend folder not found (missing package.json)."
+if (-not (Test-Path (Join-Path $frontendPath "package.json"))) {
+  throw "Frontend folder not found at 'bee' (missing package.json)."
 }
 
 Write-Host "Starting backend in background job..."
@@ -17,9 +15,13 @@ $backendJob = Start-Job -ScriptBlock {
   node server.js
 } -ArgumentList $backendPath
 
-Write-Host "Starting frontend in this window..."
+Write-Host "Starting frontend (bee) in this window..."
 try {
   Set-Location $frontendPath
+  Start-Job -ScriptBlock {
+    Start-Sleep -Seconds 3
+    Start-Process "http://localhost:5173"
+  } | Out-Null
   npm run dev
 } finally {
   if ($backendJob.State -eq "Running") {
