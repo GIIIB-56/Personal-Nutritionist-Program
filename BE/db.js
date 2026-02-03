@@ -1,243 +1,7 @@
-const Database = require("better-sqlite3");
-const path = require("path");
-
-const dbPath = path.join(__dirname, "data.db");
-const db = new Database(dbPath);
-
-db.pragma("journal_mode = WAL");
-
-db.exec(`
-  CREATE TABLE IF NOT EXISTS records (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    food_name TEXT NOT NULL,
-    calories REAL NOT NULL,
-    protein_g REAL NOT NULL,
-    carbs_g REAL NOT NULL,
-    fat_g REAL NOT NULL,
-    sugar_g REAL NOT NULL,
-    sodium_mg REAL NOT NULL,
-    fiber_g REAL NOT NULL,
-    top_benefits TEXT NOT NULL,
-    health_warnings TEXT NOT NULL,
-    dietary_advice TEXT NOT NULL,
-    source TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT (datetime('now','localtime'))
-  );
-
-  CREATE TABLE IF NOT EXISTS user_profile (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    weight REAL,
-    height REAL,
-    activity_level TEXT,
-    ai_provider TEXT,
-    openai_key TEXT,
-    gemini_key TEXT,
-    theme_mode TEXT,
-    font_scale REAL,
-    target_type TEXT,
-    daily_calorie_goal REAL
-  );
-`);
-
-try {
-  db.exec(`ALTER TABLE user_profile ADD COLUMN height REAL`);
-} catch (error) {
-  // Column already exists.
-}
-
-try {
-  db.exec(`ALTER TABLE user_profile ADD COLUMN activity_level TEXT`);
-} catch (error) {
-  // Column already exists.
-}
-
-try {
-  db.exec(`ALTER TABLE user_profile ADD COLUMN ai_provider TEXT`);
-} catch (error) {
-  // Column already exists.
-}
-
-try {
-  db.exec(`ALTER TABLE user_profile ADD COLUMN openai_key TEXT`);
-} catch (error) {
-  // Column already exists.
-}
-
-try {
-  db.exec(`ALTER TABLE user_profile ADD COLUMN gemini_key TEXT`);
-} catch (error) {
-  // Column already exists.
-}
-
-try {
-  db.exec(`ALTER TABLE user_profile ADD COLUMN theme_mode TEXT`);
-} catch (error) {
-  // Column already exists.
-}
-
-try {
-  db.exec(`ALTER TABLE user_profile ADD COLUMN font_scale REAL`);
-} catch (error) {
-  // Column already exists.
-}
-
-const insertRecordStmt = db.prepare(`
-  INSERT INTO records (
-    food_name,
-    calories,
-    protein_g,
-    carbs_g,
-    fat_g,
-    sugar_g,
-    sodium_mg,
-    fiber_g,
-    top_benefits,
-    health_warnings,
-    dietary_advice,
-    source,
-    created_at
-  ) VALUES (
-    @food_name,
-    @calories,
-    @protein_g,
-    @carbs_g,
-    @fat_g,
-    @sugar_g,
-    @sodium_mg,
-    @fiber_g,
-    @top_benefits,
-    @health_warnings,
-    @dietary_advice,
-    @source,
-    COALESCE(@created_at, datetime('now','localtime'))
-  )
-`);
-
-const listTodayStmt = db.prepare(`
-  SELECT *
-  FROM records
-  WHERE date(created_at) = date('now','localtime')
-  ORDER BY datetime(created_at) DESC
-`);
-
-const listByDateStmt = db.prepare(`
-  SELECT *
-  FROM records
-  WHERE date(created_at) = date(@date)
-  ORDER BY datetime(created_at) DESC
-`);
-const summaryTodayStmt = db.prepare(`
-  SELECT
-    COALESCE(SUM(calories), 0) AS calories,
-    COALESCE(SUM(protein_g), 0) AS protein_g,
-    COALESCE(SUM(carbs_g), 0) AS carbs_g,
-    COALESCE(SUM(fat_g), 0) AS fat_g,
-    COALESCE(SUM(sugar_g), 0) AS sugar_g,
-    COALESCE(SUM(sodium_mg), 0) AS sodium_mg,
-    COALESCE(SUM(fiber_g), 0) AS fiber_g
-  FROM records
-  WHERE date(created_at) = date('now','localtime')
-`);
-
-const weeklySummaryStmt = db.prepare(`
-  SELECT
-    date(created_at) AS day,
-    COALESCE(SUM(calories), 0) AS calories,
-    COALESCE(SUM(protein_g), 0) AS protein_g,
-    COALESCE(SUM(carbs_g), 0) AS carbs_g,
-    COALESCE(SUM(fat_g), 0) AS fat_g,
-    COALESCE(SUM(sugar_g), 0) AS sugar_g,
-    COALESCE(SUM(sodium_mg), 0) AS sodium_mg,
-    COALESCE(SUM(fiber_g), 0) AS fiber_g
-  FROM records
-  WHERE date(created_at) >= date('now','localtime','-6 days')
-  GROUP BY date(created_at)
-  ORDER BY date(created_at) ASC
-`);
-
-const summaryByRangeStmt = db.prepare(`
-  SELECT
-    date(created_at) AS day,
-    COALESCE(SUM(calories), 0) AS calories,
-    COALESCE(SUM(protein_g), 0) AS protein_g,
-    COALESCE(SUM(carbs_g), 0) AS carbs_g,
-    COALESCE(SUM(fat_g), 0) AS fat_g,
-    COALESCE(SUM(sugar_g), 0) AS sugar_g,
-    COALESCE(SUM(sodium_mg), 0) AS sodium_mg,
-    COALESCE(SUM(fiber_g), 0) AS fiber_g
-  FROM records
-  WHERE date(created_at) >= date(@start)
-    AND date(created_at) <= date(@end)
-  GROUP BY date(created_at)
-  ORDER BY date(created_at) ASC
-`);
-
-const getProfileStmt = db.prepare(`
-  SELECT id, weight, height, activity_level, ai_provider, openai_key, gemini_key, theme_mode, font_scale, target_type, daily_calorie_goal
-  FROM user_profile
-  ORDER BY id ASC
-  LIMIT 1
-`);
-
-const upsertProfileStmt = db.prepare(`
-  INSERT INTO user_profile (id, weight, height, activity_level, ai_provider, openai_key, gemini_key, theme_mode, font_scale, target_type, daily_calorie_goal)
-  VALUES (1, @weight, @height, @activity_level, @ai_provider, @openai_key, @gemini_key, @theme_mode, @font_scale, @target_type, @daily_calorie_goal)
-  ON CONFLICT(id) DO UPDATE SET
-    weight = excluded.weight,
-    height = excluded.height,
-    activity_level = excluded.activity_level,
-    ai_provider = excluded.ai_provider,
-    openai_key = excluded.openai_key,
-    gemini_key = excluded.gemini_key,
-    theme_mode = excluded.theme_mode,
-    font_scale = excluded.font_scale,
-    target_type = excluded.target_type,
-    daily_calorie_goal = excluded.daily_calorie_goal
-`);
-
-function insertRecord(record) {
-  const payload = {
-    ...record,
-    top_benefits: JSON.stringify(record.top_benefits || []),
-    health_warnings: JSON.stringify(record.health_warnings || []),
-    created_at: record.created_at || null,
-  };
-  const info = insertRecordStmt.run(payload);
-  return info.lastInsertRowid;
-}
-
-function listToday() {
-  const rows = listTodayStmt.all();
-  return rows.map((row) => ({
-    ...row,
-    top_benefits: JSON.parse(row.top_benefits || "[]"),
-    health_warnings: JSON.parse(row.health_warnings || "[]"),
-  }));
-}
-
-function listByDate(date) {
-  const rows = listByDateStmt.all({ date });
-  return rows.map((row) => ({
-    ...row,
-    top_benefits: JSON.parse(row.top_benefits || "[]"),
-    health_warnings: JSON.parse(row.health_warnings || "[]"),
-  }));
-}
-
-function summaryToday() {
-  return summaryTodayStmt.get();
-}
-
-function summaryLast7Days() {
-  return weeklySummaryStmt.all();
-}
-
-function summaryByDateRange(startDate, endDate) {
-  return summaryByRangeStmt.all({ start: startDate, end: endDate });
-}
-
-function getProfile() {
-  return getProfileStmt.get() || {
+const store = {
+  nextId: 1,
+  records: [],
+  profile: {
     weight: null,
     height: null,
     activity_level: null,
@@ -248,11 +12,135 @@ function getProfile() {
     font_scale: null,
     target_type: null,
     daily_calorie_goal: null,
+  },
+};
+
+function toNumber(value, fallback = 0) {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string") {
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
+  return fallback;
+}
+
+function formatLocalDateTime(date) {
+  const pad = (value) => String(value).padStart(2, "0");
+  return [
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`,
+    `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`,
+  ].join(" ");
+}
+
+function formatLocalDate(date) {
+  const pad = (value) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function normalizeRecord(record) {
+  return {
+    food_name: record.food_name,
+    calories: toNumber(record.calories),
+    protein_g: toNumber(record.protein_g),
+    carbs_g: toNumber(record.carbs_g),
+    fat_g: toNumber(record.fat_g),
+    sugar_g: toNumber(record.sugar_g),
+    sodium_mg: toNumber(record.sodium_mg),
+    fiber_g: toNumber(record.fiber_g),
+    top_benefits: Array.isArray(record.top_benefits) ? record.top_benefits : [],
+    health_warnings: Array.isArray(record.health_warnings) ? record.health_warnings : [],
+    dietary_advice: record.dietary_advice || "",
+    source: record.source || "image",
   };
 }
 
+function insertRecord(record) {
+  const id = store.nextId++;
+  const created_at = record.created_at || formatLocalDateTime(new Date());
+  const normalized = normalizeRecord(record);
+  store.records.push({ id, created_at, ...normalized });
+  return id;
+}
+
+function listToday() {
+  const today = formatLocalDate(new Date());
+  return store.records
+    .filter((row) => String(row.created_at || "").startsWith(today))
+    .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+}
+
+function listByDate(date) {
+  return store.records
+    .filter((row) => String(row.created_at || "").startsWith(date))
+    .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+}
+
+function summaryToday() {
+  return store.records.reduce(
+    (acc, row) => {
+      const day = String(row.created_at || "").slice(0, 10);
+      if (day !== formatLocalDate(new Date())) return acc;
+      acc.calories += toNumber(row.calories);
+      acc.protein_g += toNumber(row.protein_g);
+      acc.carbs_g += toNumber(row.carbs_g);
+      acc.fat_g += toNumber(row.fat_g);
+      acc.sugar_g += toNumber(row.sugar_g);
+      acc.sodium_mg += toNumber(row.sodium_mg);
+      acc.fiber_g += toNumber(row.fiber_g);
+      return acc;
+    },
+    {
+      calories: 0,
+      protein_g: 0,
+      carbs_g: 0,
+      fat_g: 0,
+      sugar_g: 0,
+      sodium_mg: 0,
+      fiber_g: 0,
+    }
+  );
+}
+
+function summaryByDateRange(startDate, endDate) {
+  const summaryMap = new Map();
+  for (const row of store.records) {
+    const day = String(row.created_at || "").slice(0, 10);
+    if (day < startDate || day > endDate) continue;
+    if (!summaryMap.has(day)) {
+      summaryMap.set(day, {
+        day,
+        calories: 0,
+        protein_g: 0,
+        carbs_g: 0,
+        fat_g: 0,
+        sugar_g: 0,
+        sodium_mg: 0,
+        fiber_g: 0,
+      });
+    }
+    const entry = summaryMap.get(day);
+    entry.calories += toNumber(row.calories);
+    entry.protein_g += toNumber(row.protein_g);
+    entry.carbs_g += toNumber(row.carbs_g);
+    entry.fat_g += toNumber(row.fat_g);
+    entry.sugar_g += toNumber(row.sugar_g);
+    entry.sodium_mg += toNumber(row.sodium_mg);
+    entry.fiber_g += toNumber(row.fiber_g);
+  }
+  return Array.from(summaryMap.values()).sort((a, b) =>
+    a.day.localeCompare(b.day)
+  );
+}
+
+function getProfile() {
+  return store.profile;
+}
+
 function upsertProfile(profile) {
-  upsertProfileStmt.run(profile);
+  store.profile = {
+    ...store.profile,
+    ...profile,
+  };
 }
 
 module.exports = {
@@ -260,7 +148,6 @@ module.exports = {
   listToday,
   listByDate,
   summaryToday,
-  summaryLast7Days,
   summaryByDateRange,
   getProfile,
   upsertProfile,
