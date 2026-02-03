@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://personal-nutritionist-program.onrender.com/api/:path*"
+    }
+  ]
+}
