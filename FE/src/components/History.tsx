@@ -110,7 +110,7 @@ export function History({
   const weekDays = getWeekDays();
   const monthDays = getMonthDays();
   const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const dayLabelsChinese = ['一', '二', '三', '四', '五', '六', '日'];
+  const dayLabelsChinese = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
   const isSameDay = (date1: Date, date2: Date) => {
     return date1.getDate() === date2.getDate() &&
@@ -130,7 +130,7 @@ export function History({
   };
 
   const formatMonthYearChinese = (date: Date) => {
-    return `${date.getFullYear()}年${String(date.getMonth() + 1).padStart(2, '0')}月`;
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
   };
 
   const changeMonth = (direction: number) => {
@@ -174,25 +174,25 @@ export function History({
   const [isWeeklyExpanded, setIsWeeklyExpanded] = useState(false);
 
   return (
-    <div className="h-full flex flex-col bg-white overflow-y-auto pb-28">
+    <div className="h-full flex flex-col bg-white overflow-y-auto pb-28 md:pb-24">
       {/* Header */}
-      <div className="px-5 pt-12 pb-4 border-b border-gray-100">
+      <div className="px-5 md:px-10 pt-12 pb-4 border-b border-gray-100">
         {/* Empty header for spacing */}
       </div>
 
-      <div className="px-5 py-6">
+      <div className="px-5 md:px-10 py-6 md:py-8 md:max-w-4xl md:mx-auto w-full">
         {/* Calendar Navigation */}
         <div className="flex items-center justify-between mb-4">
           <button 
             onClick={() => changeMonth(-1)}
-            className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
           >
             <ChevronLeft className="w-5 h-5 text-gray-600" />
           </button>
-          <span className="text-gray-900 font-medium">{formatMonthYear(currentMonth)}</span>
+          <span className="text-gray-900 font-medium md:text-lg">{formatMonthYear(currentMonth)}</span>
           <button 
             onClick={() => changeMonth(1)}
-            className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
           >
             <ChevronRight className="w-5 h-5 text-gray-600" />
           </button>
@@ -200,19 +200,19 @@ export function History({
 
         {/* Week Calendar Grid */}
         <div className="mb-4">
-          <div className="grid grid-cols-7 gap-2 mb-3">
+          <div className="grid grid-cols-7 gap-2 md:gap-3 mb-3">
             {dayLabels.map((label) => (
-              <div key={label} className="text-center text-xs text-gray-500 font-medium">
+              <div key={label} className="text-center text-xs md:text-sm text-gray-500 font-medium">
                 {label}
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-7 gap-2 md:gap-3">
             {weekDays.map((date, index) => (
               <button
                 key={index}
                 onClick={() => handleDateSelect(date)}
-                className={`aspect-square rounded-2xl flex flex-col items-center justify-center text-sm transition-all relative ${
+                className={`aspect-square rounded-2xl md:rounded-3xl flex flex-col items-center justify-center text-sm md:text-base transition-all relative ${
                   isSameDay(date, selectedDate)
                     ? 'bg-[#2ECC71] text-white font-medium'
                     : 'bg-white border border-gray-200 text-gray-700 hover:border-gray-300'
@@ -229,7 +229,7 @@ export function History({
 
         {/* Date Display with Calendar Toggle */}
         <div className="flex items-center justify-between mb-6 px-1">
-          <span className="text-gray-900 font-medium text-lg">{formatDateDisplay(selectedDate)}</span>
+          <span className="text-gray-900 font-medium text-lg md:text-xl">{formatDateDisplay(selectedDate)}</span>
           <button 
             onClick={() => setShowFullCalendar(!showFullCalendar)}
             className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-lg transition-colors"
@@ -295,26 +295,26 @@ export function History({
                 onClick={clearSelection}
                 className="text-[#3498DB] text-sm font-medium"
               >
-                清除
+                Clear
               </button>
               <button 
                 onClick={goToToday}
                 className="text-[#3498DB] text-sm font-medium"
               >
-                今天
+                Today
               </button>
             </div>
           </div>
         )}
 
         {/* Daily Summary Card */}
-        <div className="bg-[#2ECC71] rounded-2xl p-5 mb-6 text-white">
+        <div className="bg-[#2ECC71] rounded-2xl md:rounded-3xl p-5 md:p-6 mb-6 text-white">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
               <div className="text-sm opacity-90 mb-1">
                 {selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
               </div>
-              <div className="text-3xl font-bold mb-1">{totalCaloriesToday.toFixed(1)} kcal</div>
+              <div className="text-3xl md:text-4xl font-bold mb-1">{totalCaloriesToday.toFixed(1)} kcal</div>
               <div className="text-sm opacity-90">of {userProfile.dailyCalories.toLocaleString()} kcal goal</div>
             </div>
             <div className="relative w-16 h-16">
@@ -408,7 +408,7 @@ export function History({
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-gray-900">Weekly Overview</h2>
         </div>
-        <div className="bg-[#F8F9FA] rounded-2xl p-5">
+        <div className="bg-[#F8F9FA] rounded-2xl md:rounded-3xl p-5 md:p-6">
           {weeklyItems.length ? (
             <>
               <ul className="text-sm text-gray-700 space-y-2 list-disc pl-5">
@@ -425,7 +425,7 @@ export function History({
                   onClick={() => setIsWeeklyExpanded((prev) => !prev)}
                   className="mt-3 text-[#2ECC71] text-sm font-medium hover:underline"
                 >
-                  {isWeeklyExpanded ? '收起建议' : '展开建议'}
+                  {isWeeklyExpanded ? 'Collapse insights' : 'Expand insights'}
                 </button>
               ) : null}
             </>
@@ -453,7 +453,7 @@ export function History({
             </div>
           )}
           {weeklyReport ? (
-            <div className="mt-4 grid grid-cols-2 gap-3 text-sm text-gray-700">
+            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-gray-700">
               <div className="bg-white rounded-xl p-3">
                 <div className="text-gray-500 text-xs mb-1">Days Met</div>
                 <div className="font-semibold">{weeklyReport.days_met}</div>

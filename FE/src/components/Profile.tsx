@@ -98,11 +98,11 @@ export function Profile({ userProfile, onUpdateProfile, onBack }: ProfileProps) 
   return (
     <div className="h-full flex flex-col bg-white overflow-y-auto">
       {/* Header */}
-      <div className="px-5 pt-12 pb-4 border-b border-gray-100">
+      <div className="px-5 md:px-10 pt-12 pb-4 border-b border-gray-100">
         {/* Empty header for spacing */}
       </div>
 
-      <div className="px-5 py-6 flex-1 pb-28">
+      <div className="px-5 md:px-10 py-6 md:py-8 flex-1 pb-28 md:max-w-4xl md:mx-auto w-full">
         {/* Profile Icon */}
         <div className="flex justify-center mb-6">
           <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#2ECC71] to-[#27AE60] flex items-center justify-center">
@@ -117,7 +117,7 @@ export function Profile({ userProfile, onUpdateProfile, onBack }: ProfileProps) 
             <h2 className="text-gray-900">Your Stats</h2>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-4 md:space-y-0 md:grid md:grid-cols-3 md:gap-4">
             <div>
               <label className="text-gray-600 text-sm mb-2 block">Weight (kg)</label>
               <input
@@ -306,75 +306,77 @@ export function Profile({ userProfile, onUpdateProfile, onBack }: ProfileProps) 
             <h2 className="text-gray-900">Display</h2>
           </div>
 
-          {/* Theme Selector */}
-          <div className="mb-5">
-            <label className="text-gray-600 text-sm mb-2 block">Theme</label>
-            <div className="bg-[#F8F9FA] rounded-xl p-1 grid grid-cols-2 gap-1">
-              <button
-                onClick={() => setTheme('light')}
-                className={`h-11 rounded-lg transition-all font-medium text-sm ${
-                  theme === 'light'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Light
-              </button>
-              <button
-                onClick={() => setTheme('dark')}
-                className={`h-11 rounded-lg transition-all font-medium text-sm ${
-                  theme === 'dark'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Dark
-              </button>
+          <div className="md:grid md:grid-cols-2 md:gap-6">
+            {/* Theme Selector */}
+            <div className="mb-5 md:mb-0">
+              <label className="text-gray-600 text-sm mb-2 block">Theme</label>
+              <div className="bg-[#F8F9FA] rounded-xl p-1 grid grid-cols-2 gap-1">
+                <button
+                  onClick={() => setTheme('light')}
+                  className={`h-11 rounded-lg transition-all font-medium text-sm ${
+                    theme === 'light'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Light
+                </button>
+                <button
+                  onClick={() => setTheme('dark')}
+                  className={`h-11 rounded-lg transition-all font-medium text-sm ${
+                    theme === 'dark'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Dark
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* Font Size Slider */}
-          <div>
-            <label className="text-gray-600 text-sm mb-2 block">
-              Font Size ({fontSize}%)
-            </label>
-            <div className="relative pt-1">
-              <input
-                type="range"
-                min="70"
-                max="130"
-                step="10"
-                value={fontSize}
-                onChange={(e) => setFontSize(Number(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer slider"
-                style={{
-                  background: `linear-gradient(to right, #3498DB 0%, #3498DB ${((fontSize - 70) / 60) * 100}%, #E5E7EB ${((fontSize - 70) / 60) * 100}%, #E5E7EB 100%)`
-                }}
-              />
-              <style>{`
-                .slider::-webkit-slider-thumb {
-                  appearance: none;
-                  width: 20px;
-                  height: 20px;
-                  border-radius: 50%;
-                  background: #3498DB;
-                  cursor: pointer;
-                  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-                .slider::-moz-range-thumb {
-                  width: 20px;
-                  height: 20px;
-                  border-radius: 50%;
-                  background: #3498DB;
-                  cursor: pointer;
-                  border: none;
-                  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-              `}</style>
-              <div className="flex justify-between mt-2 text-xs text-gray-500">
-                <span>70%</span>
-                <span>100%</span>
-                <span>130%</span>
+            {/* Font Size Slider */}
+            <div>
+              <label className="text-gray-600 text-sm mb-2 block">
+                Font Size ({fontSize}%)
+              </label>
+              <div className="relative pt-1">
+                <input
+                  type="range"
+                  min="70"
+                  max="130"
+                  step="10"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(Number(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer slider"
+                  style={{
+                    background: `linear-gradient(to right, #3498DB 0%, #3498DB ${((fontSize - 70) / 60) * 100}%, #E5E7EB ${((fontSize - 70) / 60) * 100}%, #E5E7EB 100%)`
+                  }}
+                />
+                <style>{`
+                  .slider::-webkit-slider-thumb {
+                    appearance: none;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: #3498DB;
+                    cursor: pointer;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                  }
+                  .slider::-moz-range-thumb {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: #3498DB;
+                    cursor: pointer;
+                    border: none;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                  }
+                `}</style>
+                <div className="flex justify-between mt-2 text-xs text-gray-500">
+                  <span>70%</span>
+                  <span>100%</span>
+                  <span>130%</span>
+                </div>
               </div>
             </div>
           </div>
@@ -382,7 +384,7 @@ export function Profile({ userProfile, onUpdateProfile, onBack }: ProfileProps) 
       </div>
 
       {/* Save Button - Fixed at bottom */}
-      <div className="px-5 pb-32 pt-4 bg-white border-t border-gray-100">
+      <div className="px-5 md:px-10 pb-32 pt-4 bg-white border-t border-gray-100">
         <button
           onClick={handleSave}
           className="w-full h-14 rounded-xl bg-[#2ECC71] text-white hover:bg-[#27AE60] transition-colors font-medium"

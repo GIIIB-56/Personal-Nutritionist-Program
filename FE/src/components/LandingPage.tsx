@@ -37,7 +37,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="px-6 pt-16 pb-8 text-center relative"
+        className="px-6 md:px-12 pt-16 md:pt-20 pb-8 text-center relative"
       >
         {/* Logo and Badge */}
         <motion.div
@@ -61,7 +61,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          className="text-4xl font-bold text-gray-900 mb-3 leading-tight"
+          className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 leading-tight"
         >
           Your Personal
           <br />
@@ -74,7 +74,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
-          className="text-base text-gray-600 mb-6 max-w-sm mx-auto leading-relaxed"
+          className="text-base md:text-lg text-gray-600 mb-6 max-w-sm md:max-w-2xl mx-auto leading-relaxed"
         >
           Snap a photo to get precise nutritional analysis and smart dietary advice, easily achieving your health goals
         </motion.p>
@@ -117,9 +117,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        className="px-6 py-8"
+        className="px-6 md:px-12 py-8"
       >
-        <div className="relative mx-auto w-full max-w-xs">
+        <div className="relative mx-auto w-full max-w-xs md:max-w-md">
           {/* Phone Frame Mockup */}
           <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-[3rem] p-3 shadow-2xl">
             <div className="bg-white rounded-[2.5rem] overflow-hidden aspect-[9/19]">
@@ -162,16 +162,16 @@ export function LandingPage({ onStart }: LandingPageProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        className="px-6 py-12"
+        className="px-6 md:px-12 py-12"
       >
         <h2 className="text-2xl font-bold text-center text-gray-900 mb-3">
           Core Features
         </h2>
-        <p className="text-center text-gray-600 mb-8 max-w-md mx-auto">
+        <p className="text-center text-gray-600 mb-8 max-w-md md:max-w-2xl mx-auto">
           Professional nutrition management tools, making healthy eating simple and efficient
         </p>
 
-        <div className="grid grid-cols-1 gap-4 max-w-md mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-md md:max-w-4xl mx-auto">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -205,16 +205,16 @@ export function LandingPage({ onStart }: LandingPageProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        className="px-6 py-12 bg-gradient-to-b from-white to-[#F8F9FA]"
+        className="px-6 md:px-12 py-12 bg-gradient-to-b from-white to-[#F8F9FA]"
       >
         <h2 className="text-2xl font-bold text-center text-gray-900 mb-3">
           Why Choose Us
         </h2>
-        <p className="text-center text-gray-600 mb-8 max-w-md mx-auto">
+        <p className="text-center text-gray-600 mb-8 max-w-md md:max-w-2xl mx-auto">
           Leveraging cutting-edge AI technology, we provide professional and reliable nutrition management services
         </p>
 
-        <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-md md:max-w-4xl mx-auto">
           {[
             { icon: Heart, title: 'Professional Reliability', desc: 'Based on nutritional standards', color: '#E74C3C' },
             { icon: Shield, title: 'Privacy Security', desc: 'Data locally encrypted', color: '#3498DB' },
@@ -252,9 +252,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        className="px-6 py-12"
+        className="px-6 md:px-12 py-12"
       >
-        <div className="max-w-md mx-auto bg-gradient-to-br from-[#2ECC71]/5 to-[#3498DB]/5 rounded-3xl p-8">
+        <div className="max-w-md md:max-w-3xl mx-auto bg-gradient-to-br from-[#2ECC71]/5 to-[#3498DB]/5 rounded-3xl p-8">
           <div className="grid grid-cols-3 gap-4 text-center">
             {[
               { value: '10K+', label: 'Active Users', icon: Users },
@@ -283,13 +283,13 @@ export function LandingPage({ onStart }: LandingPageProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        className="px-6 py-12 bg-gradient-to-b from-[#F8F9FA] to-white"
+        className="px-6 md:px-12 py-12 bg-gradient-to-b from-[#F8F9FA] to-white"
       >
         <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
           Simple Three Steps, Start Your Healthy Journey
         </h2>
 
-        <div className="max-w-md mx-auto space-y-6">
+        <div className="max-w-md md:max-w-3xl mx-auto space-y-6">
           {[
             { step: '01', title: 'Snap and Upload', description: 'Photograph your meal or select a photo from your gallery', color: '#2ECC71' },
             { step: '02', title: 'AI Analysis', description: 'GPT-4 Vision instantly identifies and analyzes nutritional content', color: '#3498DB' },
@@ -331,9 +331,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        className="px-6 py-16 text-center"
+        className="px-6 md:px-12 py-16 text-center"
       >
-        <div className="max-w-md mx-auto bg-gradient-to-br from-[#2ECC71] to-[#27AE60] rounded-3xl p-8 shadow-2xl shadow-[#2ECC71]/30">
+        <div className="max-w-md md:max-w-3xl mx-auto bg-gradient-to-br from-[#2ECC71] to-[#27AE60] rounded-3xl p-8 shadow-2xl shadow-[#2ECC71]/30">
           <h2 className="text-2xl font-bold text-white mb-3">
             Ready to Start?
           </h2>
@@ -356,7 +356,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="px-6 py-8 text-center text-sm text-gray-500"
+        className="px-6 md:px-12 py-8 text-center text-sm md:text-base text-gray-500"
       >
         <p>Powered by OpenAI GPT-4 Vision</p>
         <p className="mt-2">Empowering healthy living with technology</p>

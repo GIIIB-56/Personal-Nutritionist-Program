@@ -19,7 +19,7 @@ export function BottomNav({ currentScreen, onNavigate, onScan }: BottomNavProps)
 
   return (
     <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-100 safe-area-bottom">
-      <div className="flex items-center justify-around h-20 px-2">
+      <div className="flex items-center justify-around h-20 md:h-24 px-2 md:px-6">
         {/* Home */}
         <motion.button
           onClick={() => onNavigate('dashboard')}
@@ -28,7 +28,7 @@ export function BottomNav({ currentScreen, onNavigate, onScan }: BottomNavProps)
           transition={{ type: 'spring', stiffness: 400, damping: 17 }}
         >
           <motion.div 
-            className={`p-2 rounded-2xl ${
+            className={`p-2 md:p-3 rounded-2xl ${
               currentScreen === 'dashboard' 
                 ? 'bg-[#2ECC71]' 
                 : 'bg-transparent'
@@ -40,12 +40,12 @@ export function BottomNav({ currentScreen, onNavigate, onScan }: BottomNavProps)
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
             <Home 
-              className={`w-6 h-6 transition-colors ${
+              className={`w-6 h-6 md:w-7 md:h-7 transition-colors ${
                 currentScreen === 'dashboard' ? 'text-white' : 'text-gray-400'
               }`}
             />
           </motion.div>
-          <span className={`text-xs transition-colors ${
+          <span className={`text-xs md:text-sm transition-colors ${
             currentScreen === 'dashboard' ? 'text-[#2ECC71] font-medium' : 'text-gray-400'
           }`}>
             Home
@@ -60,7 +60,7 @@ export function BottomNav({ currentScreen, onNavigate, onScan }: BottomNavProps)
           transition={{ type: 'spring', stiffness: 400, damping: 17 }}
         >
           <motion.div 
-            className={`p-2 rounded-2xl ${
+            className={`p-2 md:p-3 rounded-2xl ${
               currentScreen === 'analysis' 
                 ? 'bg-[#2ECC71]' 
                 : 'bg-transparent'
@@ -72,12 +72,12 @@ export function BottomNav({ currentScreen, onNavigate, onScan }: BottomNavProps)
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
             <Camera 
-              className={`w-6 h-6 transition-colors ${
+              className={`w-6 h-6 md:w-7 md:h-7 transition-colors ${
                 currentScreen === 'analysis' ? 'text-white' : 'text-gray-400'
               }`}
             />
           </motion.div>
-          <span className={`text-xs transition-colors ${
+          <span className={`text-xs md:text-sm transition-colors ${
             currentScreen === 'analysis' ? 'text-[#2ECC71] font-medium' : 'text-gray-400'
           }`}>
             Scan
@@ -92,7 +92,7 @@ export function BottomNav({ currentScreen, onNavigate, onScan }: BottomNavProps)
           transition={{ type: 'spring', stiffness: 400, damping: 17 }}
         >
           <motion.div 
-            className={`p-2 rounded-2xl ${
+            className={`p-2 md:p-3 rounded-2xl ${
               currentScreen === 'history' 
                 ? 'bg-[#2ECC71]' 
                 : 'bg-transparent'
@@ -104,12 +104,12 @@ export function BottomNav({ currentScreen, onNavigate, onScan }: BottomNavProps)
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
             <BarChart3 
-              className={`w-6 h-6 transition-colors ${
+              className={`w-6 h-6 md:w-7 md:h-7 transition-colors ${
                 currentScreen === 'history' ? 'text-white' : 'text-gray-400'
               }`}
             />
           </motion.div>
-          <span className={`text-xs transition-colors ${
+          <span className={`text-xs md:text-sm transition-colors ${
             currentScreen === 'history' ? 'text-[#2ECC71] font-medium' : 'text-gray-400'
           }`}>
             Reports
@@ -124,7 +124,7 @@ export function BottomNav({ currentScreen, onNavigate, onScan }: BottomNavProps)
           transition={{ type: 'spring', stiffness: 400, damping: 17 }}
         >
           <motion.div 
-            className={`p-2 rounded-2xl ${
+            className={`p-2 md:p-3 rounded-2xl ${
               currentScreen === 'profile' 
                 ? 'bg-[#2ECC71]' 
                 : 'bg-transparent'
@@ -136,12 +136,12 @@ export function BottomNav({ currentScreen, onNavigate, onScan }: BottomNavProps)
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
             <User 
-              className={`w-6 h-6 transition-colors ${
+              className={`w-6 h-6 md:w-7 md:h-7 transition-colors ${
                 currentScreen === 'profile' ? 'text-white' : 'text-gray-400'
               }`}
             />
           </motion.div>
-          <span className={`text-xs transition-colors ${
+          <span className={`text-xs md:text-sm transition-colors ${
             currentScreen === 'profile' ? 'text-[#2ECC71] font-medium' : 'text-gray-400'
           }`}>
             Profile

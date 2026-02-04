@@ -72,15 +72,15 @@ export function Dashboard({
   };
 
   return (
-    <div className="h-full flex flex-col bg-white overflow-y-auto pb-28">
+    <div className="h-full flex flex-col bg-white overflow-y-auto pb-28 md:pb-24">
       {/* Header */}
-      <div className="px-5 pt-12 pb-4 flex items-center justify-between">
+      <div className="px-5 md:px-10 pt-12 pb-4 flex items-center justify-between">
         <div className="w-10" />
         <div className="flex items-center gap-1.5">
-          <span className="text-2xl font-bold bg-gradient-to-r from-[#2ECC71] to-[#27AE60] bg-clip-text text-transparent tracking-tight">
+          <span className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#2ECC71] to-[#27AE60] bg-clip-text text-transparent tracking-tight">
             Nutri
           </span>
-          <span className="text-2xl font-bold text-gray-900 tracking-tight">
+          <span className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
             AI
           </span>
         </div>
@@ -88,23 +88,23 @@ export function Dashboard({
       </div>
 
       {/* Date Selector */}
-      <div className="px-5 mb-4">
-        <div className="flex items-center justify-between bg-[#F8F9FA] rounded-2xl px-4 py-3">
+      <div className="px-5 md:px-10 mb-4">
+        <div className="flex items-center justify-between bg-[#F8F9FA] rounded-2xl md:rounded-3xl px-4 md:px-6 py-3 md:py-4">
           <button 
             onClick={() => changeDate(-1)}
-            className="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors"
+            className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:bg-white rounded-lg transition-colors"
           >
             <ChevronLeft className="w-5 h-5 text-gray-600" />
           </button>
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-gray-500" />
-            <span className="text-gray-600 text-sm">
+            <span className="text-gray-600 text-sm md:text-base">
               Showing selected date: <span className="text-gray-900 font-medium">{formatDate(selectedDate)}</span>
             </span>
           </div>
           <button 
             onClick={() => changeDate(1)}
-            className="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors"
+            className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:bg-white rounded-lg transition-colors"
           >
             <ChevronRight className="w-5 h-5 text-gray-600" />
           </button>
@@ -112,10 +112,11 @@ export function Dashboard({
       </div>
 
       {/* Calorie Ring */}
-      <div className="px-5 py-6 bg-[#F8F9FA] mx-5 rounded-2xl mb-5">
+      <div className="px-5 md:px-10 mb-5">
+        <div className="py-6 bg-[#F8F9FA] rounded-2xl md:rounded-3xl px-4 md:px-6">
         <div className="flex justify-center">
           <div className="relative">
-            <svg width="220" height="220" className="transform -rotate-90">
+            <svg width="220" height="220" className="transform -rotate-90 md:scale-110">
               <circle
                 cx="110"
                 cy="110"
@@ -158,11 +159,12 @@ export function Dashboard({
           </span>
         </div>
       </div>
+      </div>
 
       {/* Today's Macros */}
-      <div className="px-5 mb-5">
+      <div className="px-5 md:px-10 mb-5">
         <h2 className="text-gray-900 mb-4">Today's Macros</h2>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <MacroCard
             label="Protein"
             value={totalProtein}
@@ -199,11 +201,11 @@ export function Dashboard({
       </div>
 
       {/* Recent Meals */}
-      <div className="px-5 mb-5 flex-1">
+      <div className="px-5 md:px-10 mb-5 flex-1">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-gray-900">Recent Meals</h2>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-3 md:space-y-0 md:grid md:grid-cols-2 md:gap-4">
           {meals.slice(-2).reverse().map((meal) => (
             <div
               key={meal.id}
@@ -240,14 +242,14 @@ export function Dashboard({
       </div>
 
       {/* Manual Input - Simplified, removed Scan button since it's in bottom nav */}
-      <div className="px-5 pb-6 pt-4 bg-white border-t border-gray-100">
+      <div className="px-5 md:px-10 pb-6 pt-4 bg-white border-t border-gray-100">
         <form onSubmit={handleSubmit} className="relative">
           <input
             type="text"
             value={mealInput}
             onChange={(e) => setMealInput(e.target.value)}
             placeholder="Type what you ate (e.g., Two boiled eggs)..."
-            className="w-full h-12 pl-4 pr-12 rounded-xl bg-[#F8F9FA] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2ECC71] text-sm"
+            className="w-full h-12 md:h-14 pl-4 pr-12 rounded-xl bg-[#F8F9FA] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2ECC71] text-sm md:text-base"
           />
           <button
             type="submit"

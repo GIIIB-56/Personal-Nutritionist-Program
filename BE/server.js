@@ -24,17 +24,17 @@ function getOpenAIClient(apiKey) {
 }
 
 const SYSTEM_PROMPT = [
-  "Role: 你是一位精通全球膳食数据的资深营养师。",
-  "Task: 识别图片中的食物，估算营养数据并给出建议。",
+  "Role: You are a professional nutritionist.",
+  "Task: Identify the food in the image, estimate nutrition, and give advice.",
   "Rules:",
-  "1. 必须返回严格的 JSON 格式。",
-  "2. 如果图片非食物，请在 food_name 字段说明。",
-  "3. 建议语言简洁，针对当前摄入给出后续饮食调整。",
-  "4. 必须包含 keys: food_name, calories, protein_g, carbs_g, fat_g, sugar_g, sodium_mg, fiber_g, top_benefits, health_warnings, dietary_advice。",
-  "5. top_benefits 和 health_warnings 必须是字符串数组。",
+  "1. Return strict JSON only.",
+  "2. If the image is not food, mention it in food_name.",
+  "3. Advice should be concise and actionable for the current intake.",
+  "4. Must include keys: food_name, calories, protein_g, carbs_g, fat_g, sugar_g, sodium_mg, fiber_g, top_benefits, health_warnings, dietary_advice.",
+  "5. top_benefits and health_warnings must be arrays of strings.",
 ].join("\n");
 
-const NON_FOOD_MESSAGE = "你上传的图片未检测到食物，请重新拍摄。";
+const NON_FOOD_MESSAGE = "No food detected. Please retake the photo.";
 
 function toNumber(value, fallback = 0) {
   if (typeof value === "number" && Number.isFinite(value)) return value;
@@ -123,12 +123,12 @@ function normalizeWeight(value) {
   }
   if (typeof value === "string") {
     const trimmed = value.trim();
-    if (!trimmed) return "未知";
+    if (!trimmed) return "Unknown";
     if (/[a-zA-Z]/.test(trimmed)) return trimmed;
     const parsed = Number.parseFloat(trimmed);
     return Number.isFinite(parsed) ? `${parsed}g` : trimmed;
   }
-  return "未知";
+  return "Unknown";
 }
 
 function toStringArray(value) {
@@ -157,21 +157,13 @@ function normalizeAdviceText(value) {
 function isNonFoodName(value) {
   if (!value) return false;
   const normalized = String(value).toLowerCase();
-  const keywords = [
-    "非食物",
-    "不是食物",
-    "无食物",
-    "未检测到食物",
-    "not food",
-    "non-food",
-    "no food",
-  ];
+  const keywords = ["not food", "non-food", "no food", "not edible"];
   return keywords.some((keyword) => normalized.includes(keyword));
 }
 
 function normalizeItem(raw) {
   const nutrients = raw?.nutrients || {};
-  const foodName = toString(raw?.food_name || raw?.food_item, "未识别");
+  const foodName = toString(raw?.food_name || raw?.food_item, "Unknown meal");
   const isNonFood = isNonFoodName(foodName);
 
   return {
@@ -283,15 +275,15 @@ function buildAdvicePrompt(profile, summary) {
   const rangeHigh = Math.round(goal * 1.1);
 
   return [
-    "你是一位营养师，请根据用户目标和当日摄入给出建议。",
-    "请返回严格 JSON: {\"advice\":\"...\"}",
-    `用户目标: ${target}`,
-    `今日摄入: ${calories} kcal`,
-    `目标热量: ${goal} kcal`,
-    `剩余热量: ${diff} kcal`,
-    `三大营养素(g): 蛋白质 ${summary.protein_g}, 碳水 ${summary.carbs_g}, 脂肪 ${summary.fat_g}`,
-    `糖 ${summary.sugar_g}g, 钠 ${summary.sodium_mg}mg, 纤维 ${summary.fiber_g}g`,
-    `保持模式范围: ${rangeLow}-${rangeHigh} kcal`,
+    "You are a nutritionist. Provide advice based on the user's goal and today's intake.",
+    'Return strict JSON: {"advice":"..."}',
+    `User goal: ${target}`,
+    `Today intake: ${calories} kcal`,
+    `Target calories: ${goal} kcal`,
+    `Remaining calories: ${diff} kcal`,
+    `Macros (g): protein ${summary.protein_g}, carbs ${summary.carbs_g}, fat ${summary.fat_g}`,
+    `Sugar ${summary.sugar_g}g, sodium ${summary.sodium_mg}mg, fiber ${summary.fiber_g}g`,
+    `Target range: ${rangeLow}-${rangeHigh} kcal`,
   ].join("\n");
 }
 
@@ -432,7 +424,7 @@ app.post("/api/analyze", async (req, res) => {
     if (aiConfig.provider === "gemini") {
       content = await callGemini({
         apiKey: aiConfig.geminiKey,
-        prompt: [SYSTEM_PROMPT, "请按规则返回 JSON。"].join("\n"),
+        prompt: [SYSTEM_PROMPT, "Return JSON following the rules."].join("\n"),
         image: { mimeType, base64: base64Payload },
       });
     } else {
@@ -445,7 +437,7 @@ app.post("/api/analyze", async (req, res) => {
           {
             role: "user",
             content: [
-              { type: "text", text: "请按规则返回 JSON。" },
+              { type: "text", text: "Return JSON following the rules." },
               { type: "image_url", image_url: { url: dataUrl } },
             ],
           },
@@ -468,7 +460,7 @@ app.post("/api/analyze", async (req, res) => {
       console.error("Model returned invalid JSON.");
       return res.status(502).json({
         success: false,
-        error: "模型返回格式异常",
+        error: "Model returned invalid JSON.",
       });
     }
     console.error(`AI request failed (${aiConfig.provider}):`, {
@@ -481,18 +473,18 @@ app.post("/api/analyze", async (req, res) => {
     if (error?.status === 401) {
       return res.status(500).json({
         success: false,
-        error: "API Key 无效或未授权",
+        error: "API key is invalid or unauthorized.",
       });
     }
     if (error?.status === 429) {
       return res.status(500).json({
         success: false,
-        error: "额度不足或达到速率限制",
+        error: "Quota exceeded or rate limit reached.",
       });
     }
     return res.status(500).json({
       success: false,
-      error: "识别服务暂时不可用",
+      error: "Recognition service is temporarily unavailable.",
     });
   } finally {
     const costMs = Date.now() - startedAt;
@@ -529,10 +521,10 @@ app.post("/api/analyze-text", async (req, res) => {
   try {
     const textPrompt = [
       SYSTEM_PROMPT,
-      "补充说明：用户输入为文字描述，不是图片。",
-      "如果包含多种食物，请返回 items 数组，每个元素是一条独立记录。",
-      "若只有一种食物，也使用 items 数组返回 1 条记录。",
-      `用户饮食描述：${text}`,
+      "Note: The user input is a text description, not an image.",
+      "If multiple foods are mentioned, return an items array with one record per food.",
+      "If only one food is mentioned, still return an items array with 1 record.",
+      `User food description: ${text}`,
     ].join("\n");
 
     let content = "{}";
@@ -551,12 +543,12 @@ app.post("/api/analyze-text", async (req, res) => {
             role: "system",
             content: [
               SYSTEM_PROMPT,
-              "补充说明：用户输入为文字描述，不是图片。",
-              "如果包含多种食物，请返回 items 数组，每个元素是一条独立记录。",
-              "若只有一种食物，也使用 items 数组返回 1 条记录。",
+              "Note: The user input is a text description, not an image.",
+              "If multiple foods are mentioned, return an items array with one record per food.",
+              "If only one food is mentioned, still return an items array with 1 record.",
             ].join("\n"),
           },
-          { role: "user", content: `用户饮食描述：${text}` },
+          { role: "user", content: `User food description: ${text}` },
         ],
       });
       content = response.choices?.[0]?.message?.content || "{}";
@@ -576,7 +568,7 @@ app.post("/api/analyze-text", async (req, res) => {
       console.error("Model returned invalid JSON.");
       return res.status(502).json({
         success: false,
-        error: "模型返回格式异常",
+        error: "Model returned invalid JSON.",
       });
     }
     console.error(`AI request failed (${aiConfig.provider}):`, {
@@ -589,18 +581,18 @@ app.post("/api/analyze-text", async (req, res) => {
     if (error?.status === 401) {
       return res.status(500).json({
         success: false,
-        error: "API Key 无效或未授权",
+        error: "API key is invalid or unauthorized.",
       });
     }
     if (error?.status === 429) {
       return res.status(500).json({
         success: false,
-        error: "额度不足或达到速率限制",
+        error: "Quota exceeded or rate limit reached.",
       });
     }
     return res.status(500).json({
       success: false,
-      error: "识别服务暂时不可用",
+      error: "Recognition service is temporarily unavailable.",
     });
   } finally {
     const costMs = Date.now() - startedAt;
@@ -723,7 +715,7 @@ app.get("/api/advice/today", async (req, res) => {
       console.error("Model returned invalid JSON.");
       return res.status(502).json({
         success: false,
-        error: "模型返回格式异常",
+        error: "Model returned invalid JSON.",
       });
     }
     console.error(`AI request failed (${aiConfig.provider}):`, {
@@ -736,18 +728,18 @@ app.get("/api/advice/today", async (req, res) => {
     if (error?.status === 401) {
       return res.status(500).json({
         success: false,
-        error: "API Key 无效或未授权",
+        error: "API key is invalid or unauthorized.",
       });
     }
     if (error?.status === 429) {
       return res.status(500).json({
         success: false,
-        error: "额度不足或达到速率限制",
+        error: "Quota exceeded or rate limit reached.",
       });
     }
     return res.status(500).json({
       success: false,
-      error: "识别服务暂时不可用",
+      error: "Recognition service is temporarily unavailable.",
     });
   } finally {
     const costMs = Date.now() - startedAt;
@@ -809,12 +801,12 @@ app.get("/api/report/weekly", async (req, res) => {
 
   try {
     const prompt = [
-      "请根据过去7天的摄入数据生成周报。",
-      "返回严格 JSON: {\"summary\":\"...\",\"highlights\":[\"...\",\"...\"]}",
-      `用户目标: ${profile.target_type || "unknown"}`,
-      `每日目标热量: ${profile.daily_calorie_goal || "unknown"}`,
-      `达标天数: ${stats.days_met}, 超标天数: ${stats.days_over}, 未达标天数: ${stats.days_under}`,
-      `7天汇总: ${JSON.stringify(weekly)}`,
+      "Generate a weekly report from the past 7 days of intake data.",
+      'Return strict JSON: {"summary":"...","highlights":["...","..."]}',
+      `User goal: ${profile.target_type || "unknown"}`,
+      `Daily calorie goal: ${profile.daily_calorie_goal || "unknown"}`,
+      `Days met: ${stats.days_met}, days over: ${stats.days_over}, days under: ${stats.days_under}`,
+      `7-day summary: ${JSON.stringify(weekly)}`,
     ].join("\n");
 
     let content = "{}";
@@ -861,7 +853,7 @@ app.get("/api/report/weekly", async (req, res) => {
       console.error("Model returned invalid JSON.");
       return res.status(502).json({
         success: false,
-        error: "模型返回格式异常",
+        error: "Model returned invalid JSON.",
       });
     }
     console.error(`AI request failed (${aiConfig.provider}):`, {
@@ -874,18 +866,18 @@ app.get("/api/report/weekly", async (req, res) => {
     if (error?.status === 401) {
       return res.status(500).json({
         success: false,
-        error: "API Key 无效或未授权",
+        error: "API key is invalid or unauthorized.",
       });
     }
     if (error?.status === 429) {
       return res.status(500).json({
         success: false,
-        error: "额度不足或达到速率限制",
+        error: "Quota exceeded or rate limit reached.",
       });
     }
     return res.status(500).json({
       success: false,
-      error: "识别服务暂时不可用",
+      error: "Recognition service is temporarily unavailable.",
     });
   } finally {
     const costMs = Date.now() - startedAt;

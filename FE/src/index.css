@@ -1807,6 +1807,8 @@
 :root {
   --font-scale: 1;
   --font-size: 16px;
+  --app-width: min(100vw, 430px);
+  --app-height: min(100vh, 932px);
   --background: #fff;
   --foreground: oklch(.145 0 0);
   --card: #fff;
@@ -1922,6 +1924,13 @@
 
 html {
   font-size: calc(var(--font-size) * var(--font-scale));
+}
+
+@media (min-width: 768px) {
+  :root {
+    --app-width: min(96vw, 980px);
+    --app-height: min(96vh, 1280px);
+  }
 }
 
 ::-webkit-scrollbar {

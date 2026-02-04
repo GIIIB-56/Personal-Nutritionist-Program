@@ -73,8 +73,8 @@ export function PhoneFrame({ children, showLanding }: PhoneFrameProps) {
         duration: 0.6,
         ease: [0.22, 1, 0.36, 1]
       }}
-      className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden relative"
-      style={{ height: '812px' }}
+      className="bg-white rounded-3xl shadow-2xl overflow-hidden relative"
+      style={{ width: "var(--app-width)", height: "var(--app-height)" }}
     >
       {children}
     </motion.div>

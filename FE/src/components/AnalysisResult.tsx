@@ -12,7 +12,7 @@ interface AnalysisResultProps {
 export function AnalysisResult({ meal, userProfile, onSave, onBack }: AnalysisResultProps) {
   const [isScanning, setIsScanning] = useState(true);
   const isNonFood = Boolean(meal.isNonFood);
-  const nonFoodMessage = '你上传的图片未检测到食物，请重新拍摄。';
+  const nonFoodMessage = 'No food detected. Please retake the photo.';
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,9 +24,9 @@ export function AnalysisResult({ meal, userProfile, onSave, onBack }: AnalysisRe
   const confidence = 96;
 
   return (
-    <div className="h-full flex flex-col bg-white overflow-y-auto pb-20">
+    <div className="h-full flex flex-col bg-white overflow-y-auto pb-20 md:pb-24">
       {/* Header */}
-      <div className="px-5 pt-12 pb-4 flex items-center justify-between border-b border-gray-100">
+      <div className="px-5 md:px-10 pt-12 pb-4 flex items-center justify-between border-b border-gray-100">
         <button
           onClick={onBack}
           className="w-10 h-10 flex items-center justify-center"
@@ -39,13 +39,13 @@ export function AnalysisResult({ meal, userProfile, onSave, onBack }: AnalysisRe
         </button>
       </div>
 
-      <div className="px-5 py-6">
+      <div className="px-5 md:px-10 py-6 md:py-8 md:max-w-4xl md:mx-auto w-full">
         {/* Food Image with Scanning Effect */}
         <div className="relative rounded-2xl overflow-hidden mb-5">
           <img
             src={meal.imageUrl}
             alt={meal.name}
-            className="w-full h-56 object-cover"
+            className="w-full h-56 md:h-72 object-cover"
           />
           {isScanning ? (
             <div className="absolute top-4 right-4">
@@ -64,7 +64,7 @@ export function AnalysisResult({ meal, userProfile, onSave, onBack }: AnalysisRe
                 <div className="w-5 h-5 rounded-full bg-[#F59E0B] flex items-center justify-center">
                   <span className="text-white text-xs font-bold">!</span>
                 </div>
-                <span className="text-[#F59E0B] text-sm font-medium">未检测到食物</span>
+                <span className="text-[#F59E0B] text-sm font-medium">No food detected</span>
               </div>
               <div className="bg-[#F8F9FA] rounded-2xl p-4 text-gray-700 text-sm leading-relaxed mb-6">
                 {nonFoodMessage}
@@ -73,7 +73,7 @@ export function AnalysisResult({ meal, userProfile, onSave, onBack }: AnalysisRe
                 onClick={onBack}
                 className="w-full h-14 rounded-xl bg-[#2ECC71] text-white hover:bg-[#27AE60] transition-colors font-medium"
               >
-                返回重拍
+                Retake Photo
               </button>
             </>
           ) : (
@@ -103,9 +103,9 @@ export function AnalysisResult({ meal, userProfile, onSave, onBack }: AnalysisRe
             {/* Nutritional Breakdown */}
             <h3 className="text-gray-900 mb-4">Nutritional Breakdown</h3>
             
-            <div className="grid grid-cols-2 gap-3 mb-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
               {/* Large Calories Card */}
-              <div className="col-span-1 bg-[#2ECC71] rounded-2xl p-5 text-white">
+              <div className="col-span-2 md:col-span-2 bg-[#2ECC71] rounded-2xl p-5 text-white">
                 <div className="flex items-center gap-2 mb-2">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M10 2L12.5 7.5L18 8.5L14 13L15 18.5L10 16L5 18.5L6 13L2 8.5L7.5 7.5L10 2Z" 

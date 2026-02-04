@@ -55,7 +55,7 @@ export interface MealEntry {
 
 const DEFAULT_IMAGE_URL =
   'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMGZvJTIwYm93bHxlbnwxfHx8fDE3Njc1MDA0MDF8MA&ixlib=rb-4.1.0&q=80&w=1080';
-const NON_FOOD_MESSAGE = '你上传的图片未检测到食物，请重新拍摄。';
+const NON_FOOD_MESSAGE = 'No food detected. Please retake the photo.';
 
 function getTextImageUrl(text: string) {
   const query = encodeURIComponent(text.trim() || 'healthy meal');
@@ -70,7 +70,7 @@ function mapApiMealToEntry(
   const name = meal.food_name?.trim()
     ? meal.food_name
     : isNonFood
-    ? '未检测到食物'
+    ? 'No food detected'
     : 'Unknown meal';
   const advice = meal.dietary_advice || (isNonFood ? NON_FOOD_MESSAGE : '');
   return {
@@ -317,7 +317,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center p-2 md:p-10">
       <PhoneFrame showLanding={showLanding}>
         <LandingTransition isVisible={showLanding}>
           <LandingPage onStart={handleStartApp} />
@@ -461,7 +461,7 @@ export default function App() {
               <span className="loading-orb__ring"></span>
               <span className="loading-orb__dot"></span>
             </div>
-            <div className="text-gray-800 text-sm font-medium">正在解析营养成分</div>
+            <div className="text-gray-800 text-sm font-medium">Analyzing nutrition...</div>
             <div className="loading-dots" aria-hidden="true">
               <span></span>
               <span></span>
